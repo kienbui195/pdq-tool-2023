@@ -193,42 +193,42 @@ const App = () => {
 								</Button>
 							</GridItem>
 						</Grid>
+						<Divider marginTop={'4'} marginBottom={'4'} />
+						{audio && (
+							<Grid templateColumns={'repeat(12, 1fr)'} gap={4}>
+								<GridItem colSpan={6}>
+									<Flex flexDirection={'column'}>
+										<Text fontWeight={'bold'} color={'tomato'} marginBottom={'4'}>
+											Nghe thử
+										</Text>
+										<audio controls>
+											<source src={audio} type='audio/mpeg' />
+										</audio>
+									</Flex>
+								</GridItem>
+								<GridItem colSpan={6}>
+									<Flex flexDirection={'column'}>
+										<Text fontWeight={'bold'} color={'tomato'} marginBottom={'4'}>
+											Click để tải về
+										</Text>
+										<Link download href={audio} isExternal>
+											Download
+										</Link>
+									</Flex>
+								</GridItem>
+								<GridItem colSpan={12}>
+									<Divider marginBottom={'16px'} />
+									<Flex flex={1} justifyContent={'center'}>
+										<Button background={'red.400'} onClick={() => setAudio(null)}>
+											Xóa
+										</Button>
+									</Flex>
+								</GridItem>
+							</Grid>
+						)}
 					</TabPanel>
 				</TabPanels>
 			</Tabs>
-			<Divider marginTop={'4'} marginBottom={'4'} />
-			{audio && (
-				<Grid templateColumns={'repeat(12, 1fr)'} gap={4}>
-					<GridItem colSpan={6}>
-						<Flex flexDirection={'column'}>
-							<Text fontWeight={'bold'} color={'tomato'} marginBottom={'4'}>
-								Nghe thử
-							</Text>
-							<audio controls>
-								<source src={audio} type='audio/mpeg' />
-							</audio>
-						</Flex>
-					</GridItem>
-					<GridItem colSpan={6}>
-						<Flex flexDirection={'column'}>
-							<Text fontWeight={'bold'} color={'tomato'} marginBottom={'4'}>
-								Click để tải về
-							</Text>
-							<Link download href={audio} isExternal>
-								Download
-							</Link>
-						</Flex>
-					</GridItem>
-					<GridItem colSpan={12}>
-						<Divider marginBottom={'16px'} />
-						<Flex flex={1} justifyContent={'center'}>
-							<Button background={'red.400'} onClick={() => setAudio(null)}>
-								Xóa
-							</Button>
-						</Flex>
-					</GridItem>
-				</Grid>
-			)}
 		</Box>
 	);
 };
