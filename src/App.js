@@ -1,8 +1,8 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs, Table, Thead, Tbody, Tr, Th, Td, TableContainer, useToast, Button, Text, Divider, Grid, GridItem, Textarea, Input, Link } from '@chakra-ui/react';
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs, Table, Thead, Tbody, Tr, Th, Td, TableContainer, useToast, Button, Text, Divider, Grid, GridItem, Textarea, Input, Link, Flex } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const ALERT_STATUS = {
+export const ALERT_STATUS = {
 	success: 'success',
 	error: 'error',
 	info: 'info',
@@ -51,6 +51,8 @@ const App = () => {
 			});
 	};
 
+	console.log(audio);
+
 	const handleChangeTextToSpeech = () => {
 		if (voice.trim() === '' || form.trim() === '') {
 			sendAlert('Change Voice', 'Kiểm tra lại đã chọn voice, thêm đủ nội dung hay chưa!', ALERT_STATUS['warning']);
@@ -68,10 +70,12 @@ const App = () => {
 					data: JSON.stringify({
 						text: form,
 					}),
+					responseType: 'arraybuffer',
 				})
 				.then(res => {
 					handleGenerateFile(res.data);
 					setForm('');
+					sendAlert('Create File', 'Success!', ALERT_STATUS['success']);
 					setLoading(false);
 				})
 				.catch(e => {
@@ -182,15 +186,38 @@ const App = () => {
 					</TabPanel>
 				</TabPanels>
 			</Tabs>
+			<Divider marginTop={'4'} marginBottom={'4'} />
 			{audio && (
-				<Box>
-					<audio controls autoPlay>
-						<source src={audio} type='audio/mpeg' />
-					</audio>
-					<Link download isExternal>
-						Download
-					</Link>
-				</Box>
+				<Grid templateColumns={'repeat(12, 1fr)'} gap={4}>
+					<GridItem colSpan={6}>
+						<Flex flexDirection={'column'}>
+							<Text fontWeight={'bold'} color={'tomato'} marginBottom={'4'}>
+								Nghe thử
+							</Text>
+							<audio controls>
+								<source src={audio} type='audio/mpeg' />
+							</audio>
+						</Flex>
+					</GridItem>
+					<GridItem colSpan={6}>
+						<Flex flexDirection={'column'}>
+							<Text fontWeight={'bold'} color={'tomato'} marginBottom={'4'}>
+								Click để tải về
+							</Text>
+							<Link download href={audio} isExternal>
+								Download
+							</Link>
+						</Flex>
+					</GridItem>
+					<GridItem colSpan={12}>
+						<Divider marginBottom={'16px'} />
+						<Flex flex={1} justifyContent={'center'}>
+							<Button background={'red.400'} onClick={() => setAudio(null)}>
+								Xóa
+							</Button>
+						</Flex>
+					</GridItem>
+				</Grid>
 			)}
 		</Box>
 	);
