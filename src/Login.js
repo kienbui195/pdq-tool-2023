@@ -31,6 +31,7 @@ const Login = () => {
 	const handleSubmit = () => {
 		if (JSON.stringify(form) === JSON.stringify(ACCOUNT)) {
 			sendAlert('Login', 'Thành công!', ALERT_STATUS['success']);
+			localStorage.setItem('user', JSON.stringify({ username: 'admin', password: '123456' }));
 			navigate('/app');
 		} else {
 			sendAlert('Login', 'Kiểm tra lại thông tin', ALERT_STATUS['error']);

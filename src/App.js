@@ -1,6 +1,7 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs, Table, Thead, Tbody, Tr, Th, Td, TableContainer, useToast, Button, Text, Divider, Grid, GridItem, Textarea, Link, Flex } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const ALERT_STATUS = {
 	success: 'success',
@@ -19,6 +20,17 @@ const App = () => {
 	const [loading, setLoading] = useState(false);
 	const [disabledTab, setDisabledTab] = useState(true);
 	const [audio, setAudio] = useState(null);
+	const navigate = useNavigate();
+
+	const user = localStorage.getItem('user');
+
+	if (!user) {
+		navigate('/');
+	} else {
+		if (JSON.parse(user).username !== 'admin' || JSON.parse(user).password !== '123456') {
+			navigate('/');
+		}
+	}
 
 	const sendAlert = (title, message, status) => {
 		toast({
@@ -50,8 +62,6 @@ const App = () => {
 				sendAlert('Get Voice', e.message, ALERT_STATUS['error']);
 			});
 	};
-
-	console.log(audio);
 
 	const handleChangeTextToSpeech = () => {
 		if (voice.trim() === '' || form.trim() === '') {
