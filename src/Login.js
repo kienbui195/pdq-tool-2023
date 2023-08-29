@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Input, Text, useToast } from '@chakra-ui/react';
+import { Button, Flex, Input, Text, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ALERT_STATUS } from './App';
@@ -8,7 +8,7 @@ const ACCOUNT = {
 	password: '123456',
 };
 
-const Login = props => {
+const Login = () => {
 	const [form, setForm] = useState({
 		username: '',
 		password: '',
