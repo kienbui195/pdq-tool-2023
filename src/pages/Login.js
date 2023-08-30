@@ -1,7 +1,8 @@
-import { Button, Flex, Input, Text, useToast } from '@chakra-ui/react';
+import { Button, Flex, Input, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ALERT_STATUS } from './App';
+import { ALERT_STATUS } from '../ultis/constant';
+import { useApp } from '../context';
 
 const ACCOUNT = {
 	username: 'admin',
@@ -15,18 +16,7 @@ const Login = () => {
 	});
 	const [disabled, setDisabled] = useState(false);
 	const navigate = useNavigate();
-	const toast = useToast();
-
-	const sendAlert = (title, message, status) => {
-		toast({
-			position: 'top-right',
-			title,
-			description: message,
-			status: ALERT_STATUS[status],
-			duration: 3000,
-			isClosable: true,
-		});
-	};
+	const { sendAlert } = useApp();
 
 	const handleSubmit = () => {
 		if (JSON.stringify(form) === JSON.stringify(ACCOUNT)) {
@@ -51,7 +41,7 @@ const Login = () => {
 	}, [form]);
 
 	return (
-		<Flex justifyContent={'center'} alignItems={'center'} padding={'80'}>
+		<Flex justifyContent={'center'} alignItems={'center'} padding={'120px'}>
 			<Flex boxShadow={'dark-lg'} flexDirection={'column'} justifyContent={'center'} padding={'8'}>
 				<Text fontSize={'32'} fontWeight={'bold'} marginBottom={'8'}>
 					Đăng nhập
@@ -59,7 +49,7 @@ const Login = () => {
 				<Input marginBottom={'4'} placeholder='Username' value={form.username} onChange={ev => setForm({ ...form, username: ev.target.value })} />
 				<Input marginBottom={'4'} placeholder='Password' value={form.password} onChange={ev => setForm({ ...form, password: ev.target.value })} />
 				<Button background={'green.200'} isDisabled={disabled} onClick={handleSubmit}>
-					Đăng nhập
+					Submit
 				</Button>
 			</Flex>
 		</Flex>

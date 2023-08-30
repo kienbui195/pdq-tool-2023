@@ -1,21 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './Login';
+import App from './pages/App';
+import Login from './pages/Login';
+import { AppContextProvider } from './context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<ChakraProvider>
-		<BrowserRouter>
-			<Routes>
-				<Route path='/app' element={<App />} />
-				<Route path='/' element={<Login />} />
-			</Routes>
-		</BrowserRouter>
+		<AppContextProvider>
+			<BrowserRouter>
+				<Routes>
+					<Route path='/app' element={<App />} />
+					<Route path='/' element={<Login />} />
+				</Routes>
+			</BrowserRouter>
+		</AppContextProvider>
 	</ChakraProvider>
 );
 
