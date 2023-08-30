@@ -5,7 +5,7 @@ import axios from 'axios';
 import { ALERT_STATUS } from '../../ultis/constant';
 import moment from 'moment/moment';
 
-const Tool = ({ voice }) => {
+const Tool = ({ voice, apiKey }) => {
 	const [loading, setLoading] = useState(false);
 	const [form, setForm] = useState([]);
 	const { sendAlert } = useApp();
@@ -35,7 +35,7 @@ const Tool = ({ voice }) => {
 				headers: {
 					'Content-Type': 'application/json',
 					Accept: 'audio/mpeg',
-					'xi-api-key': process.env.REACT_APP_API_KEY || 'your-default-api-key',
+					'xi-api-key': apiKey || 'e9a7ae8f235b8fe220318954f1c906be',
 				},
 				data: JSON.stringify({
 					text,
