@@ -13,7 +13,7 @@ const App = () => {
 	const [voices, setVoices] = useState([]);
 	const navigate = useNavigate();
 	const { sendAlert } = useApp();
-	const user = localStorage.getItem('user');
+	const user = localStorage.getItem('user-tool');
 	const [voice, setVoice] = useState('');
 	const [apiKey, setApiKey] = useState('');
 
@@ -41,6 +41,10 @@ const App = () => {
 
 	useEffect(() => {
 		getListVoice();
+
+		window.addEventListener('beforeunload', () => {
+			localStorage.removeItem('user-tool');
+		});
 	}, []);
 
 	return (

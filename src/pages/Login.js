@@ -21,8 +21,11 @@ const Login = () => {
 	const handleSubmit = () => {
 		if (JSON.stringify(form) === JSON.stringify(ACCOUNT)) {
 			sendAlert('Login', 'Thành công!', ALERT_STATUS['success']);
-			localStorage.setItem('user', JSON.stringify({ username: 'admin', password: '123456' }));
-			localStorage.setItem('api-key', JSON.stringify(['e9a7ae8f235b8fe220318954f1c906be']));
+			localStorage.setItem('user-tool', JSON.stringify({ username: 'admin', password: '123456' }));
+			const data = localStorage.getItem('user-tool');
+			if (!data) {
+				localStorage.setItem('api-key', JSON.stringify(['e9a7ae8f235b8fe220318954f1c906be']));
+			}
 			navigate('/app');
 		} else {
 			sendAlert('Login', 'Kiểm tra lại thông tin', ALERT_STATUS['error']);
