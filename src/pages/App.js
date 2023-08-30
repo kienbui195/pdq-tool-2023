@@ -6,6 +6,7 @@ import { ALERT_STATUS } from '../ultis/constant';
 import TableVoice from '../components/TableVoice';
 import { useApp } from '../context';
 import Tool from '../components/Tool';
+import { CheckIcon } from '@chakra-ui/icons';
 
 const App = () => {
 	const [voices, setVoices] = useState([]);
@@ -41,10 +42,13 @@ const App = () => {
 	}, []);
 
 	return (
-		<Box padding='32'>
-			<Tabs variant='enclosed' isFitted>
+		<Box padding='32' background={'bisque'}>
+			<Tabs variant='soft-rounded' isFitted background={'azure'} borderRadius={'5px'} boxShadow={'dark-lg'} padding={'4'}>
 				<TabList>
-					<Tab>1. Giọng nói</Tab>
+					<Tab>
+						{`1. Giọng nói`}&nbsp;&nbsp;&nbsp;
+						{voice && <CheckIcon />}
+					</Tab>
 					<Tab>2. Chuyển text thành giọng nói</Tab>
 				</TabList>
 
