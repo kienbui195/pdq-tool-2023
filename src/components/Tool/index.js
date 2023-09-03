@@ -20,20 +20,18 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Input,
-  InputGroup,
-  InputLeftAddon,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useApp } from "../../context";
 import axios from "axios";
-import { ALERT_STATUS, FONT, IMAGE_FORMAT, IMGBUN_ACCESS_KEY, UNSPLASH_ACCESS_KEY, UNSPLASH_API_URL } from "../../ultis/constant";
+import { ALERT_STATUS, UNSPLASH_ACCESS_KEY, UNSPLASH_API_URL } from "../../ultis/constant";
 import moment from "moment/moment";
 import qs from "qs";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const Tool = ({ voice, apiKey }) => {
   const [loading, setLoading] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
   const [form, setForm] = useState([]);
   const { sendAlert } = useApp();
   const [modal, setModal] = useState(false);
@@ -41,20 +39,10 @@ const Tool = ({ voice, apiKey }) => {
   const [modalImg, setModalImg] = useState({
     open: false,
     isViewing: [],
-    per_page: 10,
+    page: 1,
     idx: "",
     lang: "en",
   });
-  const [modalTextToImage, setModalTextToImage] = useState({
-    open: false,
-    url: "",
-    idx: "",
-    size: 10,
-    color: "000000",
-    background: "FFFFFF",
-    type: IMAGE_FORMAT[2],
-  });
-  const [loadingButton, setLoadingButton] = useState(false);
 
   const handleGenerateFile = (file, id) => {
     let blob = new Blob([file], { type: "audio/mpeg" });
@@ -65,10 +53,6 @@ const Tool = ({ voice, apiKey }) => {
   const handleChangeText = (ev, idx) => {
     const value = ev.target.value;
     setForm((prevForm) => prevForm.map((item, i) => (i === idx ? { ...item, text: value } : item)));
-  };
-
-  const handleSetStateModalChangeTextToImage = (val, stateName) => {
-    setModalTextToImage({ ...modalTextToImage, [stateName]: val });
   };
 
   const checkFormEmpty = () => {
@@ -98,58 +82,37 @@ const Tool = ({ voice, apiKey }) => {
 
   const getImageByText = async (idx) => {
     try {
-      await axios
-        .request({
-          url: `${UNSPLASH_API_URL}/search/photos?${qs.stringify({
-            query: form[idx].text,
-            per_page: modalImg.per_page,
-            lang: modalImg.lang,
-          })}`,
-          method: "GET",
-          headers: {
-            Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
-          },
-        })
-        .then((res) => {
-          if (res.data.results.length > 0) {
-            const image = res.data.results;
-            setModalImg({
-              ...modalImg,
-              open: true,
-              isViewing: image,
-              idx,
-            });
-          }
-        });
+      if (idx !== "") {
+        setLoadingButton(true);
+        await axios
+          .request({
+            url: `${UNSPLASH_API_URL}/search/photos?${qs.stringify({
+              query: form[idx].text,
+              page: modalImg.page,
+              lang: modalImg.lang,
+            })}`,
+            method: "GET",
+            headers: {
+              Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
+            },
+          })
+          .then((res) => {
+            if (res.data.results.length > 0) {
+              const image = res.data.results;
+              setModalImg({
+                ...modalImg,
+                open: true,
+                isViewing: image,
+                idx,
+              });
+            }
+            setLoadingButton(false);
+          });
+      }
     } catch (error) {
+      setLoadingButton(false);
       sendAlert("Create image", error.message, ALERT_STATUS["error"]);
     }
-  };
-
-  const handleChangeTextToImage = () => {
-    setLoadingButton(true);
-    const { size, color, background, idx, type } = modalTextToImage;
-    axios
-      .request({
-        url: `https://api.imgbun.com/${modalTextToImage.type || "png"}`,
-        method: "GET",
-        params: {
-          key: IMGBUN_ACCESS_KEY,
-          text: form[idx].text,
-          size: size || 10,
-          color: color ? color.replace("#", "").toUpperCase() : "000000",
-          background: background ? background.replace("#", "").toUpperCase() : "FFFFFF",
-          type: type || IMAGE_FORMAT[2],
-        },
-      })
-      .then((res) => {
-        setModalTextToImage({ ...modalTextToImage, url: res.data.direct_link });
-        setLoadingButton(false);
-      })
-      .catch((err) => {
-        setLoadingButton(false);
-        sendAlert("Create Image", err.message, ALERT_STATUS["error"]);
-      });
   };
 
   const handleChangeTextToSpeech = async () => {
@@ -182,10 +145,10 @@ const Tool = ({ voice, apiKey }) => {
   };
 
   useEffect(() => {
-    if (modalImg.idx) {
+    if (modalImg.open) {
       getImageByText(modalImg.idx);
     }
-  }, [modalImg.per_page]);
+  }, [modalImg.page, modalImg.idx, modalImg.open]);
 
   return (
     <>
@@ -267,16 +230,6 @@ const Tool = ({ voice, apiKey }) => {
                       <Button isDisabled={form[idx].text.trim() === ""} mt="2" background={"yellow.400"} onClick={() => getImageByText(idx)}>
                         Tạo ảnh từ ND text
                       </Button>
-                      <Button
-                        isDisabled={form[idx].text.trim() === ""}
-                        mt="2"
-                        background={"pink.400"}
-                        onClick={() => {
-                          setModalTextToImage({ ...setModalTextToImage, open: true, idx: idx });
-                        }}
-                      >
-                        Tạo ảnh từ text
-                      </Button>
                     </Flex>
                   </Flex>
                   <Divider mb={"6"} mt={"6"} />
@@ -323,7 +276,7 @@ const Tool = ({ voice, apiKey }) => {
 
       {/* list image */}
 
-      <Modal isOpen={modalImg.open} onClose={() => setModalImg({ ...modalImg, open: false })}>
+      <Modal isOpen={modalImg.open} onClose={() => setModalImg({ ...modalImg, open: false, page: 1 })}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -354,91 +307,12 @@ const Tool = ({ voice, apiKey }) => {
           </ModalBody>
           <ModalFooter>
             <Button
+              isLoading={loadingButton}
               onClick={() => {
-                setModalImg({ ...modalImg, per_page: modalImg.per_page + 10 });
+                setModalImg({ ...modalImg, open: true, page: modalImg.page + 1 });
               }}
             >
               Thêm...
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      {/* text to image */}
-      <Modal isOpen={modalTextToImage.open} onClose={() => setModalTextToImage({ ...modalTextToImage, open: false })}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Text variant={"h2"}>Chuyển văn bản thành ảnh</Text>
-            <Text fontSize={"12px"} fontWeight={"normal"}>
-              setting cho chữ rồi ấn vào ảnh để tải về
-            </Text>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Grid maxH={"300px"} overflowX={"hidden"} overflowY={"auto"} padding={"8px 0 24px"} gap={2} templateColumns={"repeat(12, 1fr)"}>
-              {/* <GridItem colSpan={6}>
-                <Menu>
-                  <MenuButton fontFamily={modalTextToImage.font} as={Button} rightIcon={<ChevronDownIcon />}>
-                    {!modalTextToImage.font ? "Chọn font chữ" : modalTextToImage.font}
-                  </MenuButton>
-                  <MenuList>
-                    {FONT.map((_i, idx) => {
-                      return (
-                        <MenuItem fontFamily={_i} key={idx} onClick={() => handleSetStateModalChangeTextToImage(_i, "font")}>
-                          {_i}
-                        </MenuItem>
-                      );
-                    })}
-                  </MenuList>
-                </Menu>
-              </GridItem> */}
-              <GridItem colSpan={6}>
-                <InputGroup>
-                  <InputLeftAddon children="Cỡ chữ" />
-                  <Input placeholder="6-40" type={"number"} value={modalTextToImage.size} onChange={(ev) => handleSetStateModalChangeTextToImage(ev.target.value, "size")} />
-                </InputGroup>
-              </GridItem>
-              <GridItem colSpan={6}>
-                <InputGroup>
-                  <InputLeftAddon children={"Màu chữ"} />
-                  <Input type={"color"} value={modalTextToImage.fcolor} onChange={(ev) => handleSetStateModalChangeTextToImage(ev.target.value, "color")} />
-                </InputGroup>
-              </GridItem>
-              <GridItem colSpan={6}>
-                <InputGroup>
-                  <InputLeftAddon children={"Màu nền"} />
-                  <Input type={"color"} value={modalTextToImage.bcolor} onChange={(ev) => handleSetStateModalChangeTextToImage(ev.target.value, "background")} />
-                </InputGroup>
-              </GridItem>
-              <GridItem colSpan={6}>
-                <Menu>
-                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                    {!modalTextToImage.type ? "Loại ảnh xuất ra" : modalTextToImage.type}
-                  </MenuButton>
-                  <MenuList>
-                    {IMAGE_FORMAT.map((_i, idx) => {
-                      return (
-                        <MenuItem key={idx} onClick={() => handleSetStateModalChangeTextToImage(_i, "type")}>
-                          {_i}
-                        </MenuItem>
-                      );
-                    })}
-                  </MenuList>
-                </Menu>
-              </GridItem>
-              <GridItem colSpan={12}>
-                {modalTextToImage.url !== "" && (
-                  <Box border={"1px solid black"} cursor={"pointer"} padding={"4"} onClick={() => window.open(modalTextToImage.url, "_blank")}>
-                    <Image maxW={"100%"} height={"auto"} src={modalTextToImage.url} alt="" />
-                  </Box>
-                )}
-              </GridItem>
-            </Grid>
-          </ModalBody>
-          <ModalFooter>
-            <Button isLoading={loadingButton} onClick={handleChangeTextToImage} background={"green.400"}>
-              Tạo ảnh
             </Button>
           </ModalFooter>
         </ModalContent>
