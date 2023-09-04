@@ -20,6 +20,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useApp } from "../../context";
@@ -27,7 +28,7 @@ import axios from "axios";
 import { ALERT_STATUS, UNSPLASH_ACCESS_KEY, UNSPLASH_API_URL } from "../../ultis/constant";
 import moment from "moment/moment";
 import qs from "qs";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { AddIcon, ChevronDownIcon, DeleteIcon, PlusSquareIcon, RepeatIcon, ViewIcon } from "@chakra-ui/icons";
 
 const Tool = ({ voice, apiKey }) => {
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,10 @@ const Tool = ({ voice, apiKey }) => {
     idx: "",
     lang: "en",
   });
+  const [isSm] = useMediaQuery("(min-width: 480px)");
+  const [isMd] = useMediaQuery("(min-width: 768px)");
+  const [isLg] = useMediaQuery("(min-width: 992px)");
+  const [isXl] = useMediaQuery("(min-width: 1280px)");
 
   const handleGenerateFile = (file, id) => {
     let blob = new Blob([file], { type: "audio/mpeg" });
@@ -152,48 +157,84 @@ const Tool = ({ voice, apiKey }) => {
 
   return (
     <>
-      <Text fontSize={"30px"} color={"tomato"} fontWeight={"bold"}>
+      <Text fontSize={{ base: "18px", sm: "24px", md: "26px", lg: "32px" }} color={"tomato"} fontWeight={"bold"}>
         Tool
       </Text>
-      <Text fontStyle={"italic"}>{`ID: ${voice !== "" ? voice : "Chưa voice nào được chọn!"}`}</Text>
+      <Text fontSize={{ base: "12px", sm: "14px", md: "16px", lg: "18px" }} fontStyle={"italic"}>{`ID: ${voice !== "" ? voice : "Chưa voice nào được chọn!"}`}</Text>
       <Divider mb={"8px"} mt={"16px"} />
       <Grid templateColumns={"repeat(12, 1fr)"} gap={4}>
         <GridItem colSpan={12}>
-          <Flex gap={4} marginBottom={"8"}>
-            <Button
-              isDisabled={!voice}
-              background={"Highlight"}
-              color={"yellow.500"}
-              onClick={() => {
-                setButtonDisabled(true);
-                const today = new Date();
-                let newForm = {
-                  id: moment(today).format("YYMMDDhhmmssSS"),
-                  text: "",
-                  url: "",
-                };
-                setForm([...form, newForm]);
-              }}
-            >
-              Thêm ô text
-            </Button>
-            <Button isDisabled={!voice || form.length < 1} background={"green.400"} isLoading={loading} onClick={handleChangeTextToSpeech}>
-              Tạo File Giọng Nói
-            </Button>
-            <Button
-              isDisabled={form.length < 1}
-              colorScheme="cyan"
-              onClick={() => {
-                setForm([]);
-              }}
-            >
-              Xóa dữ liệu
-            </Button>
-            <Button colorScheme="messenger" isDisabled={buttonDisabled || form.length < 1} onClick={() => setModal({ ...modal, open: true })}>
-              {`Xem danh sách audio`}
-            </Button>
+          <Flex mb={"8"} alignItems={"center"} justifyContent={"space-between"}>
+            <Grid gap={1} templateColumns={isLg ? "repeat(4, 1fr)" : "repeat(2, 1fr)"}>
+              <GridItem>
+                <Button
+                  width={"100%"}
+                  isDisabled={!voice}
+                  background={"Highlight"}
+                  color={"yellow.500"}
+                  onClick={() => {
+                    setButtonDisabled(true);
+                    const today = new Date();
+                    let newForm = {
+                      id: moment(today).format("YYMMDDhhmmssSS"),
+                      text: "",
+                      url: "",
+                    };
+                    setForm([...form, newForm]);
+                  }}
+                >
+                  {isXl ? (
+                    "Thêm ô text"
+                  ) : (
+                    <Tooltip label="Thêm ô text">
+                      <AddIcon />
+                    </Tooltip>
+                  )}
+                </Button>
+              </GridItem>
+              <GridItem>
+                <Button width={"100%"} isDisabled={!voice || form.length < 1} background={"green.400"} isLoading={loading} onClick={handleChangeTextToSpeech}>
+                  {isXl ? (
+                    " Tạo File Giọng Nói"
+                  ) : (
+                    <Tooltip label=" Tạo File Giọng Nói">
+                      <RepeatIcon />
+                    </Tooltip>
+                  )}
+                </Button>
+              </GridItem>
+              <GridItem>
+                <Button
+                  width={"100%"}
+                  isDisabled={form.length < 1}
+                  colorScheme="cyan"
+                  onClick={() => {
+                    setForm([]);
+                  }}
+                >
+                  {isXl ? (
+                    "Xóa dữ liệu"
+                  ) : (
+                    <Tooltip label="Xóa dữ liệu">
+                      <DeleteIcon />
+                    </Tooltip>
+                  )}
+                </Button>
+              </GridItem>
+              <GridItem>
+                <Button width={"100%"} colorScheme="messenger" isDisabled={buttonDisabled || form.length < 1} onClick={() => setModal({ ...modal, open: true })}>
+                  {isXl ? (
+                    "Danh sách audio"
+                  ) : (
+                    <Tooltip label="Danh sách audio">
+                      <ViewIcon />
+                    </Tooltip>
+                  )}
+                </Button>
+              </GridItem>
+            </Grid>
             <Flex alignItems={"center"}>
-              <Text>Ngôn ngữ tìm kiếm ảnh:</Text>
+              <Text>Ngôn ngữ</Text>
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                   {modalImg.lang}
@@ -209,29 +250,44 @@ const Tool = ({ voice, apiKey }) => {
             form.map((_i, idx) => {
               return (
                 <Box key={idx}>
-                  <Flex mb={"2"} gap={2} templateColumns={"repeat(12, 3fr)"}>
-                    <Tooltip placement="top" label={_i.id} overflow={"hidden"} textOverflow={"ellipsis"}>
-                      <Text>ID</Text>
-                    </Tooltip>
-                    <Textarea placeholder="Nội dung" value={form[idx].text} onChange={(ev) => handleChangeText(ev, idx)} />
-
-                    <Flex flexDirection={"column"}>
-                      <Button
-                        colorScheme="red"
-                        onClick={() => {
-                          const updateForm = [...form];
-                          let idx = updateForm.findIndex((_it) => _it.id === _i.id);
-                          updateForm.splice(idx, 1);
-                          setForm(updateForm);
-                        }}
-                      >
-                        Xóa ô
-                      </Button>
-                      <Button isDisabled={form[idx].text.trim() === ""} mt="2" background={"yellow.400"} onClick={() => getImageByText(idx)}>
-                        Tạo ảnh từ ND text
-                      </Button>
-                    </Flex>
-                  </Flex>
+                  <Grid mb={"2"} gap={2} templateColumns={"repeat(12, 3fr)"}>
+                    <GridItem colSpan={2}>
+                      <Text>{_i.id}</Text>
+                    </GridItem>
+                    <GridItem colSpan={8}>
+                      <Textarea placeholder="Nội dung" value={form[idx].text} onChange={(ev) => handleChangeText(ev, idx)} />
+                    </GridItem>
+                    <GridItem colSpan={2}>
+                      <Flex flexDirection={"column"}>
+                        <Button
+                          colorScheme="red"
+                          onClick={() => {
+                            const updateForm = [...form];
+                            let idx = updateForm.findIndex((_it) => _it.id === _i.id);
+                            updateForm.splice(idx, 1);
+                            setForm(updateForm);
+                          }}
+                        >
+                          {isLg ? (
+                            "Xóa ô"
+                          ) : (
+                            <Tooltip label="Xóa ô">
+                              <DeleteIcon />
+                            </Tooltip>
+                          )}
+                        </Button>
+                        <Button isDisabled={form[idx].text.trim() === ""} mt="2" background={"yellow.400"} onClick={() => getImageByText(idx)}>
+                          {isLg ? (
+                            "Tạo ảnh"
+                          ) : (
+                            <Tooltip label="Tạo ảnh">
+                              <PlusSquareIcon />
+                            </Tooltip>
+                          )}
+                        </Button>
+                      </Flex>
+                    </GridItem>
+                  </Grid>
                   <Divider mb={"6"} mt={"6"} />
                 </Box>
               );

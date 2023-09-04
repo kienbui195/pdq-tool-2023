@@ -45,9 +45,9 @@ const Login = () => {
   }, [form]);
 
   return (
-    <Flex justifyContent={"center"} alignItems={"center"} padding={"120px"}>
+    <Flex justifyContent={"center"} alignItems={"center"} padding={{ base: "60px", sm: "80px", md: "100px", lg: "120px" }}>
       <Flex boxShadow={"dark-lg"} flexDirection={"column"} justifyContent={"center"} padding={"8"}>
-        <Text fontSize={"32"} fontWeight={"bold"} marginBottom={"8"}>
+        <Text fontSize={{ base: "20px", sm: "22px", md: "26px", lg: "32px" }} fontWeight={"bold"} marginBottom={"8"}>
           Đăng nhập
         </Text>
         <Input marginBottom={"4"} placeholder="Username" value={form.username} onChange={(ev) => setForm({ ...form, username: ev.target.value })} />

@@ -45,9 +45,9 @@ const App = () => {
   }, [user]);
 
   return (
-    <Grid p="100px 0" templateColumns={"repeat(12, 1fr)"} background={"bisque"}>
-      <GridItem colSpan={2}></GridItem>
-      <GridItem colSpan={8}>
+    <Grid p={{ base: "30px 0", sm: "60px 0", md: "80px 0", lg: "100px 0" }} templateColumns={"repeat(12, 1fr)"} background={"bisque"}>
+      <GridItem colSpan={{ base: 0, sm: 0, md: 1, lg: 2 }}></GridItem>
+      <GridItem colSpan={{ base: 12, sm: 12, md: 10, lg: 8 }}>
         <Tabs variant="soft-rounded" isFitted background={"azure"} borderRadius={"5px"} boxShadow={"dark-lg"} padding={"4"}>
           <TabList>
             <Tab>1. API KEY&nbsp;&nbsp;&nbsp; {apiKey && <CheckIcon />}</Tab>
@@ -71,7 +71,7 @@ const App = () => {
           </TabPanels>
         </Tabs>
       </GridItem>
-      <GridItem colSpan={2}></GridItem>
+      <GridItem colSpan={{ base: 0, sm: 0, md: 1, lg: 2 }}></GridItem>
     </Grid>
   );
 };
