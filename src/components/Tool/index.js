@@ -20,7 +20,6 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useApp } from "../../context";
@@ -34,7 +33,7 @@ const Tool = ({ voice, apiKey }) => {
   const [loading, setLoading] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
   const [form, setForm] = useState([]);
-  const { sendAlert } = useApp();
+  const { isXl, isLg, sendAlert } = useApp();
   const [modal, setModal] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [modalImg, setModalImg] = useState({
@@ -44,10 +43,6 @@ const Tool = ({ voice, apiKey }) => {
     idx: "",
     lang: "en",
   });
-  const [isSm] = useMediaQuery("(min-width: 480px)");
-  const [isMd] = useMediaQuery("(min-width: 768px)");
-  const [isLg] = useMediaQuery("(min-width: 992px)");
-  const [isXl] = useMediaQuery("(min-width: 1280px)");
 
   const handleGenerateFile = (file, id) => {
     let blob = new Blob([file], { type: "audio/mpeg" });
@@ -153,6 +148,7 @@ const Tool = ({ voice, apiKey }) => {
     if (modalImg.open) {
       getImageByText(modalImg.idx);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modalImg.page, modalImg.idx, modalImg.open]);
 
   return (
@@ -170,8 +166,7 @@ const Tool = ({ voice, apiKey }) => {
                 <Button
                   width={"100%"}
                   isDisabled={!voice}
-                  background={"Highlight"}
-                  color={"yellow.500"}
+                  colorScheme="blackAlpha"
                   onClick={() => {
                     setButtonDisabled(true);
                     const today = new Date();
@@ -193,7 +188,7 @@ const Tool = ({ voice, apiKey }) => {
                 </Button>
               </GridItem>
               <GridItem>
-                <Button width={"100%"} isDisabled={!voice || form.length < 1} background={"green.400"} isLoading={loading} onClick={handleChangeTextToSpeech}>
+                <Button colorScheme="purple" width={"100%"} isDisabled={!voice || form.length < 1} isLoading={loading} onClick={handleChangeTextToSpeech}>
                   {isXl ? (
                     " Tạo File Giọng Nói"
                   ) : (
@@ -276,7 +271,7 @@ const Tool = ({ voice, apiKey }) => {
                             </Tooltip>
                           )}
                         </Button>
-                        <Button isDisabled={form[idx].text.trim() === ""} mt="2" background={"yellow.400"} onClick={() => getImageByText(idx)}>
+                        <Button isDisabled={form[idx].text.trim() === ""} mt="2" colorScheme="yellow" onClick={() => getImageByText(idx)}>
                           {isLg ? (
                             "Tạo ảnh"
                           ) : (

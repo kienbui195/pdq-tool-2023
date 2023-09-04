@@ -1,14 +1,11 @@
-import { Box, Button, Divider, Flex, Table, TableContainer, Tag, TagLabel, Tbody, Td, Text, Th, Thead, Tooltip, Tr, useMediaQuery } from "@chakra-ui/react";
+import { Button, Divider, Flex, Table, TableContainer, Tag, TagLabel, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
 import React from "react";
 import { ALERT_STATUS } from "../../ultis/constant";
 import { useApp } from "../../context";
 import { CheckIcon, PhoneIcon } from "@chakra-ui/icons";
 
 const TableVoice = ({ voices, onChooseVoice }) => {
-  const { sendAlert } = useApp();
-  const [isSm] = useMediaQuery("(min-width: 480px)");
-  const [isMd] = useMediaQuery("(min-width: 768px)");
-  const [isLg] = useMediaQuery("(min-width: 992px)");
+  const { sendAlert, isMd } = useApp();
 
   return (
     <>
@@ -59,7 +56,7 @@ const TableVoice = ({ voices, onChooseVoice }) => {
                   </Td>
                   <Td>
                     <Flex>
-                      <Button background={"skyblue"} color={"ButtonText"} onClick={() => window.open(preview_url, "_blank")}>
+                      <Button colorScheme="teal" onClick={() => window.open(preview_url, "_blank")}>
                         {isMd ? (
                           "Nghe"
                         ) : (
@@ -70,7 +67,7 @@ const TableVoice = ({ voices, onChooseVoice }) => {
                       </Button>
                       <Button
                         marginLeft={"1.5"}
-                        background={"tomato"}
+                        colorScheme="red"
                         onClick={() => {
                           onChooseVoice && onChooseVoice(voice_id);
                           sendAlert("Copy id", "Thành công!", ALERT_STATUS["success"]);

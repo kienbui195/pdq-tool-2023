@@ -16,7 +16,7 @@ const Login = () => {
   });
   const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
-  const { sendAlert } = useApp();
+  const { sendAlert, isMd, isLg } = useApp();
 
   const handleSubmit = () => {
     if (JSON.stringify(form) === JSON.stringify(ACCOUNT)) {
@@ -46,13 +46,21 @@ const Login = () => {
 
   return (
     <Flex justifyContent={"center"} alignItems={"center"} padding={{ base: "60px", sm: "80px", md: "100px", lg: "120px" }}>
-      <Flex boxShadow={"dark-lg"} flexDirection={"column"} justifyContent={"center"} padding={"8"}>
-        <Text fontSize={{ base: "20px", sm: "22px", md: "26px", lg: "32px" }} fontWeight={"bold"} marginBottom={"8"}>
+      <Flex
+        height={{ sm: "fit-content", md: "300px", lg: "400px" }}
+        width={{ sm: "fit-content", md: "400px", lg: "600px" }}
+        boxShadow={"dark-lg"}
+        flexDirection={"column"}
+        justifyContent={"center"}
+        padding={"8"}
+        alignItems={isLg ? "center" : ""}
+      >
+        <Text fontSize={{ base: "20px", sm: "22px", md: "26px", lg: "32px" }} fontWeight={"bold"} mb={isLg ? "48px" : "32px"}>
           Đăng nhập
         </Text>
         <Input marginBottom={"4"} placeholder="Username" value={form.username} onChange={(ev) => setForm({ ...form, username: ev.target.value })} />
         <Input marginBottom={"4"} placeholder="Password" value={form.password} onChange={(ev) => setForm({ ...form, password: ev.target.value })} />
-        <Button background={"green.200"} isDisabled={disabled} onClick={handleSubmit}>
+        <Button width={"100%"} mt={isMd ? "50px" : "8px"} background={"green.200"} isDisabled={disabled} onClick={handleSubmit}>
           Submit
         </Button>
       </Flex>

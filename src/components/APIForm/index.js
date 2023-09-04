@@ -19,9 +19,8 @@ import {
   Input,
   ModalFooter,
   Tooltip,
-  useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useApp } from "../../context";
 import { ALERT_STATUS } from "../../ultis/constant";
 
@@ -37,10 +36,7 @@ const APIForm = ({ onChooseKey }) => {
   const [modal, setModal] = useState(false);
   const [key, setKey] = useState("");
   const [chooseKey, setChooseKey] = useState("");
-  const { sendAlert } = useApp();
-  const [isSm] = useMediaQuery("(min-width: 480px)");
-  const [isMd] = useMediaQuery("(min-width: 768px)");
-  const [isLg] = useMediaQuery("(min-width: 992px)");
+  const { sendAlert, isMd } = useApp();
 
   const handleSaveKey = () => {
     let idx = Array.from(listKey).findIndex((_i) => _i === key);
