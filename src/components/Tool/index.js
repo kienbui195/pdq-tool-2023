@@ -126,6 +126,7 @@ const Tool = ({ voice, apiKey }) => {
             try {
               const audioData = await postAPI(item.text);
               handleGenerateFile(audioData, item.id);
+              sendAlert("Create File", "Success!", ALERT_STATUS.success);
             } catch (error) {
               sendAlert("Create file", error.message, ALERT_STATUS.error);
             }
@@ -133,7 +134,6 @@ const Tool = ({ voice, apiKey }) => {
         );
         setButtonDisabled(false);
         setLoading(false);
-        sendAlert("Create File", "Success!", ALERT_STATUS.success);
       } catch (error) {
         sendAlert("Create file", error.message, ALERT_STATUS.error);
         setLoading(false);

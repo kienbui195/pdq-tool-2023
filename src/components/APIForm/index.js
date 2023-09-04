@@ -20,7 +20,7 @@ import {
   ModalFooter,
   Tooltip,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useApp } from "../../context";
 import { ALERT_STATUS } from "../../ultis/constant";
 
@@ -50,6 +50,13 @@ const APIForm = ({ onChooseKey }) => {
       setModal(false);
     }
   };
+
+  useEffect(() => {
+    if (listKey.length < 1) {
+      setChooseKey && setChooseKey("");
+      setKey("");
+    }
+  }, [listKey]);
 
   return (
     <Box>
