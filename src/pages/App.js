@@ -38,9 +38,6 @@ const App = () => {
       navigate("/");
     } else {
       getListVoice();
-      window.addEventListener("beforeunload", () => {
-        localStorage.removeItem("user-tool");
-      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);

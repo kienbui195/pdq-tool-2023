@@ -18,6 +18,7 @@ const TableVoice = ({ voices, onChooseVoice }) => {
         <Table variant="simple">
           <Thead>
             <Tr>
+              <Th>Tên</Th>
               <Th>Quốc gia</Th>
               <Th>Độ tuổi</Th>
               <Th>Mô tả</Th>
@@ -27,11 +28,16 @@ const TableVoice = ({ voices, onChooseVoice }) => {
           </Thead>
           <Tbody>
             {voices.map((_i, _idx) => {
-              const { voice_id, labels, preview_url } = _i;
+              const { voice_id, labels, preview_url, name } = _i;
               const { accent, age, description, gender } = labels;
 
               return (
                 <Tr key={_idx}>
+                  <Td maxW={"120px"} overflow={"hidden"} textOverflow={"ellipsis"}>
+                    <Tooltip label={name} placement="right">
+                      {name}
+                    </Tooltip>
+                  </Td>
                   <Td maxW={"80px"} overflow={"hidden"} textOverflow={"ellipsis"}>
                     <Tooltip label={accent} placement="top">
                       {accent}
