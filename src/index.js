@@ -1,26 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import { ChakraProvider } from '@chakra-ui/react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import App from './pages/App';
-import Login from './pages/Login';
-import { AppContextProvider } from './context';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import { ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { AppContextProvider } from "./context";
+import APIForm from "./components/APIForm";
+import TableVoice from "./components/TableVoice";
+import Tool from "./components/Tool";
+import App from "./pages/App";
+import Header from "./components/Header";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-	<ChakraProvider>
-		<AppContextProvider>
-			<BrowserRouter>
-				<Routes>
-					{/* <Route path='/' element={<App />} /> */}
-					<Route path='/*' element={<App />} />
-					{/* <Route path='/' element={<Login />} /> */}
-				</Routes>
-			</BrowserRouter>
-		</AppContextProvider>
-	</ChakraProvider>
+  <ChakraProvider>
+    <AppContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route path="api" element={<APIForm />} index={true} />
+            <Route path="voices" element={<TableVoice />} />
+            <Route path="tool" element={<Tool />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AppContextProvider>
+  </ChakraProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

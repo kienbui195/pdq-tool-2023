@@ -24,7 +24,7 @@ import React, { useEffect, useState } from "react";
 import { useApp } from "../../context";
 import { ALERT_STATUS } from "../../ultis/constant";
 
-const APIForm = ({ onChooseKey }) => {
+const APIForm = () => {
   const [listKey, setListKey] = useState(() => {
     const data = localStorage.getItem("api-key");
     if (data) {
@@ -36,7 +36,7 @@ const APIForm = ({ onChooseKey }) => {
   const [modal, setModal] = useState(false);
   const [key, setKey] = useState("");
   const [chooseKey, setChooseKey] = useState("");
-  const { sendAlert, isMd } = useApp();
+  const { sendAlert, isMd, state, setState } = useApp();
 
   const handleSaveKey = () => {
     let idx = Array.from(listKey).findIndex((_i) => _i === key);
@@ -59,7 +59,7 @@ const APIForm = ({ onChooseKey }) => {
   }, [listKey]);
 
   return (
-    <Box>
+    <Box marginTop={75}>
       <Flex flexDirection={"column"}>
         <Flex justifyContent={"space-between"}>
           <Box maxW={{ base: "160px", sm: "190px", md: "220px", lg: "260px" }}>
@@ -96,11 +96,14 @@ const APIForm = ({ onChooseKey }) => {
                         key={idx}
                         onClick={() => {
                           setChooseKey(_i);
-                          onChooseKey && onChooseKey(_i);
+                          setState({ ...state, apiKey: _i });
                         }}
+                        w={"fit-content"}
                       >
-                        <Flex alignItems={"center"} justifyContent={"space-between"} gap={2}>
-                          <Text>{_i}</Text>
+                        <Flex alignItems={"center"} justifyContent={"space-between"} gap={2} w={'full'}>
+                          <Box flexDir={1}>
+                            <Text>{_i}</Text>
+                          </Box>
 
                           <Button
                             isDisabled={_i === "e9a7ae8f235b8fe220318954f1c906be"}

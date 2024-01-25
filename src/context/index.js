@@ -7,6 +7,10 @@ const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
   const toast = useToast();
+  const [state, setState] = useState({
+    apiKey: '',
+    voice: []
+  })
   const [modal, setModal] = useState({
     open: false,
     title: "",
@@ -50,7 +54,7 @@ export const AppContextProvider = ({ children }) => {
   const [is2xl] = useMediaQuery("(min-width: 1280px)");
 
   return (
-    <AppContext.Provider value={{ sendAlert, showModal, closeModal, isSm, isMd, isLg, isXl, is2xl }}>
+    <AppContext.Provider value={{ sendAlert, showModal, closeModal, isSm, isMd, isLg, isXl, is2xl, state, setState }}>
       <Box>{children}</Box>
       <ModalCustom noFooter={modal.noFooter} isOpen={modal.open} onClose={closeModal} children={modal.children} title={modal.title} onConfirm={modal.onConfirm} />
     </AppContext.Provider>

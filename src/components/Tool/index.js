@@ -29,11 +29,11 @@ import moment from "moment/moment";
 import qs from "qs";
 import { AddIcon, ChevronDownIcon, DeleteIcon, PlusSquareIcon, RepeatIcon, ViewIcon } from "@chakra-ui/icons";
 
-const Tool = ({ voice, apiKey }) => {
+const Tool = () => {
   const [loading, setLoading] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
   const [form, setForm] = useState([]);
-  const { isXl, isLg, sendAlert } = useApp();
+  const { isXl, isLg, sendAlert, state, setState } = useApp();
   const [modal, setModal] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [modalImg, setModalImg] = useState({
@@ -62,12 +62,12 @@ const Tool = ({ voice, apiKey }) => {
   const postAPI = async (text) => {
     try {
       const response = await axios.request({
-        url: `https://api.elevenlabs.io/v1/text-to-speech/${voice}`,
+        url: `https://api.elevenlabs.io/v1/text-to-speech/${state.voice}`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "audio/mpeg",
-          "xi-api-key": apiKey || "e9a7ae8f235b8fe220318954f1c906be",
+          "xi-api-key": state.apiKey || "e9a7ae8f235b8fe220318954f1c906be",
         },
         data: JSON.stringify({
           text,
@@ -140,7 +140,7 @@ const Tool = ({ voice, apiKey }) => {
       }
     } else {
       setLoading(false);
-      sendAlert("Create file", "Chưa có nội dung hoặc chưa có voice id! Kiểm tra lại!", ALERT_STATUS.error);
+      sendAlert("Create file", "Chưa có nội dung hoặc chưa có state.voice id! Kiểm tra lại!", ALERT_STATUS.error);
     }
   };
 
@@ -156,7 +156,7 @@ const Tool = ({ voice, apiKey }) => {
       <Text fontSize={{ base: "18px", sm: "24px", md: "26px", lg: "32px" }} color={"tomato"} fontWeight={"bold"}>
         Tool
       </Text>
-      <Text fontSize={{ base: "12px", sm: "14px", md: "16px", lg: "18px" }} fontStyle={"italic"}>{`ID: ${voice !== "" ? voice : "Chưa voice nào được chọn!"}`}</Text>
+      <Text fontSize={{ base: "12px", sm: "14px", md: "16px", lg: "18px" }} fontStyle={"italic"}>{`ID: ${state.voice !== "" ? state.voice : "Chưa state.voice nào được chọn!"}`}</Text>
       <Divider mb={"8px"} mt={"16px"} />
       <Grid templateColumns={"repeat(12, 1fr)"} gap={4}>
         <GridItem colSpan={12}>
@@ -165,7 +165,7 @@ const Tool = ({ voice, apiKey }) => {
               <GridItem>
                 <Button
                   width={"100%"}
-                  isDisabled={!voice}
+                  isDisabled={!state.voice}
                   colorScheme="blackAlpha"
                   onClick={() => {
                     setButtonDisabled(true);
@@ -188,7 +188,7 @@ const Tool = ({ voice, apiKey }) => {
                 </Button>
               </GridItem>
               <GridItem>
-                <Button colorScheme="purple" width={"100%"} isDisabled={!voice || form.length < 1} isLoading={loading} onClick={handleChangeTextToSpeech}>
+                <Button colorScheme="purple" width={"100%"} isDisabled={!state.voice || form.length < 1} isLoading={loading} onClick={handleChangeTextToSpeech}>
                   {isXl ? (
                     " Tạo File Giọng Nói"
                   ) : (

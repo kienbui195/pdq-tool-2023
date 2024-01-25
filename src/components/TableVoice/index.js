@@ -1,14 +1,32 @@
-import { Button, Divider, Flex, Table, TableContainer, Tag, TagLabel, Tbody, Td, Text, Th, Thead, Tooltip, Tr } from "@chakra-ui/react";
-import React from "react";
+import { Button, Divider, Flex, Table, TableContainer, Tag, TagLabel, Tbody, Td, Text, Th, Thead, Tr, Box } from "@chakra-ui/react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ALERT_STATUS } from "../../ultis/constant";
 import { useApp } from "../../context";
-import { CheckIcon, PhoneIcon } from "@chakra-ui/icons";
+import axios from "axios";
 
-const TableVoice = ({ voices, onChooseVoice }) => {
-  const { sendAlert, isMd } = useApp();
+const TableVoice = () => {
+  const { sendAlert, state, setState } = useApp();
+  const [voices, setVoices] = useState([]);
+
+  const getListVoice = useCallback(async () => {
+    await axios.get("https://api.elevenlabs.io/v1/voices", {
+      headers: {
+        "Content-Type": "application/json",
+        "xi-api-key": state.apiKey || "e9a7ae8f235b8fe220318954f1c906be",
+      },
+    })
+      .then((res) => setVoices(res.data.voices))
+      .catch((e) => {
+        sendAlert("Get Voice", e.message, ALERT_STATUS["error"]);
+      });
+  }, [sendAlert, state.apiKey]);
+
+  useEffect(() => {
+    getListVoice();
+  }, [getListVoice]);
 
   return (
-    <>
+    <Box bg={'white'}>
       <Text fontSize={{ base: "18px", sm: "24px", md: "26px", lg: "32px" }} color={"tomato"} fontWeight={"bold"}>
         Danh sách giọng đọc
       </Text>
@@ -34,19 +52,13 @@ const TableVoice = ({ voices, onChooseVoice }) => {
               return (
                 <Tr key={_idx}>
                   <Td maxW={"120px"} overflow={"hidden"} textOverflow={"ellipsis"}>
-                    <Tooltip label={name} placement="right">
-                      {name}
-                    </Tooltip>
+                    {name}
                   </Td>
                   <Td maxW={"80px"} overflow={"hidden"} textOverflow={"ellipsis"}>
-                    <Tooltip label={accent} placement="top">
-                      {accent}
-                    </Tooltip>
+                    {accent}
                   </Td>
                   <Td maxW={"80px"} overflow={"hidden"} textOverflow={"ellipsis"}>
-                    <Tooltip label={age} placement="top">
-                      {age}
-                    </Tooltip>
+                    {age}
                   </Td>
                   <Td>{description}</Td>
                   <Td>
@@ -63,29 +75,17 @@ const TableVoice = ({ voices, onChooseVoice }) => {
                   <Td>
                     <Flex>
                       <Button colorScheme="teal" onClick={() => window.open(preview_url, "_blank")}>
-                        {isMd ? (
-                          "Nghe"
-                        ) : (
-                          <Tooltip label="Nghe">
-                            <PhoneIcon />
-                          </Tooltip>
-                        )}
+                        Nghe
                       </Button>
                       <Button
                         marginLeft={"1.5"}
                         colorScheme="red"
                         onClick={() => {
-                          onChooseVoice && onChooseVoice(voice_id);
+                          setState({ ...state, voice: voice_id });
                           sendAlert("Copy id", "Thành công!", ALERT_STATUS["success"]);
                         }}
                       >
-                        {isMd ? (
-                          "Chọn"
-                        ) : (
-                          <Tooltip label="Chọn">
-                            <CheckIcon />
-                          </Tooltip>
-                        )}
+                        "Chọn"
                       </Button>
                     </Flex>
                   </Td>
@@ -95,7 +95,7 @@ const TableVoice = ({ voices, onChooseVoice }) => {
           </Tbody>
         </Table>
       </TableContainer>
-    </>
+    </Box>
   );
 };
 
