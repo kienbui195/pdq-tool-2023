@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Header from "../components/Header";
 import { useNavigate, Outlet } from "react-router-dom";
-import {Box} from '@chakra-ui/react'
+import { Box } from "@chakra-ui/react";
 
 const App = () => {
   const navigate = useNavigate();
@@ -11,14 +11,14 @@ const App = () => {
   }, []);
 
   return (
-    <div style={{ background: "wheat", height: "100vh", display: "flex", flexDirection: "column", width: "100vw", alignItems: "stretch" }}>
+    <div style={{ background: "wheat", height: "100%", display: "flex", flexDirection: "column", width: "100%", alignItems: "stretch", minHeight: 'calc(100vh + 30px)' }}>
       <Header />
       <div
         style={{
           marginTop: "75px",
         }}
       >
-        <Box mx={20} bg={'white'} p={8} mt={'100px'}>
+        <Box mx={20} bg={"white"} p={8} mt={"100px"}>
           <Outlet />
         </Box>
       </div>

@@ -18,10 +18,23 @@ const NAVIGATION = [
 ];
 
 const Header = () => {
-  const pathname = useLocation().pathname
+  const pathname = useLocation().pathname;
 
   return (
-    <Box position={"fixed"} top={0} left={0} right={0} height={70} background={"white"} display={"flex"} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>
+    <Box
+      position={"fixed"}
+      top={0}
+      left={0}
+      right={0}
+      height={70}
+      background={"white"}
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
+      fontWeight={"bold"}
+      zIndex={2024}
+      boxShadow={'2xl'}
+    >
       <Breadcrumb spacing={"8px"} separator={<div>{">"}</div>}>
         {NAVIGATION.map(({ label, route }, idx) => {
           let isCurrentPage = pathname.includes(route);

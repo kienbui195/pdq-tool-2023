@@ -9,7 +9,6 @@ import APIForm from "./components/APIForm";
 import TableVoice from "./components/TableVoice";
 import Tool from "./components/Tool";
 import App from "./pages/App";
-import Header from "./components/Header";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

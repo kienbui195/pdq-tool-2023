@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Table, TableContainer, Tag, TagLabel, Tbody, Td, Text, Th, Thead, Tr, Box } from "@chakra-ui/react";
+import { Button, Divider, Flex, Table, TableContainer, Tag, TagLabel, Tbody, Td, Text, Th, Thead, Tr, Box, Tooltip } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { ALERT_STATUS } from "../../ultis/constant";
 import { useApp } from "../../context";
@@ -33,8 +33,8 @@ const TableVoice = () => {
       <Text fontSize={{ base: "12px", sm: "14px", md: "16px", lg: "18px" }}>Copy ID của một giọng nói mà bạn muốn rồi chuyển sang tab tiếp theo</Text>
       <Divider marginBottom={"8px"} marginTop={"16px"} />
       <TableContainer>
-        <Table variant="simple">
-          <Thead>
+        <Table variant="striped" maxHeight={'600px'} h={'100%'} overflow={'auto'} position={'relative'}>
+          <Thead position={'sticky'} top={0} left={0} right={0}>
             <Tr>
               <Th>Tên</Th>
               <Th>Quốc gia</Th>
@@ -44,24 +44,24 @@ const TableVoice = () => {
               <Th>Hành động</Th>
             </Tr>
           </Thead>
-          <Tbody>
+          <Tbody maxH={'600px'} h={'100%'}>
             {voices.map((_i, _idx) => {
               const { voice_id, labels, preview_url, name } = _i;
               const { accent, age, description, gender } = labels;
 
               return (
                 <Tr key={_idx}>
-                  <Td maxW={"120px"} overflow={"hidden"} textOverflow={"ellipsis"}>
-                    {name}
+                  <Td maxW={"100px"} overflow={"hidden"} textOverflow={"ellipsis"}>
+                    <Tooltip label={name} placement="top-start"><dv>{name}</dv></Tooltip>
                   </Td>
-                  <Td maxW={"80px"} overflow={"hidden"} textOverflow={"ellipsis"}>
+                  <Td maxW={"60px"} overflow={"hidden"} textOverflow={"ellipsis"}>
                     {accent}
                   </Td>
                   <Td maxW={"80px"} overflow={"hidden"} textOverflow={"ellipsis"}>
-                    {age}
+                    {age === 'young' ? 'Trẻ' : age === 'old' ? 'Già' : 'Trung niên'}
                   </Td>
                   <Td>{description}</Td>
-                  <Td>
+                  <Td w={'fit-content'}>
                     {gender === "male" ? (
                       <Tag borderRadius={"full"} variant={"solid"} colorScheme="blue">
                         <TagLabel>Nam</TagLabel>
@@ -85,7 +85,7 @@ const TableVoice = () => {
                           sendAlert("Copy id", "Thành công!", ALERT_STATUS["success"]);
                         }}
                       >
-                        "Chọn"
+                        Chọn
                       </Button>
                     </Flex>
                   </Td>
