@@ -129,7 +129,7 @@ const APIForm = () => {
         </Grid>
       </Flex>
 
-      <Modal maxW={{ base: "375px", sm: "375px", md: "400px", lg: "fit-content" }} isOpen={modal} onClose={() => setModal(false)}>
+      <Modal isCentered maxW={{ base: "375px", sm: "375px", md: "400px", lg: "fit-content" }} isOpen={modal} onClose={() => setModal(false)}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>

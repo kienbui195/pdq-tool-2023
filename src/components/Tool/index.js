@@ -161,12 +161,11 @@ const Tool = () => {
       <Grid templateColumns={"repeat(12, 1fr)"} gap={4}>
         <GridItem colSpan={12}>
           <Flex mb={"8"} alignItems={"center"} justifyContent={"space-between"}>
-            <Grid gap={1} templateColumns={isLg ? "repeat(4, 1fr)" : "repeat(2, 1fr)"}>
+            <Flex gap={1}>
               <GridItem>
                 <Button
-                  width={"100%"}
                   isDisabled={!state.voice}
-                  colorScheme="blackAlpha"
+                  colorScheme="facebook"
                   onClick={() => {
                     setButtonDisabled(true);
                     const today = new Date();
@@ -188,7 +187,7 @@ const Tool = () => {
                 </Button>
               </GridItem>
               <GridItem>
-                <Button colorScheme="purple" width={"100%"} isDisabled={!state.voice || form.length < 1} isLoading={loading} onClick={handleChangeTextToSpeech}>
+                <Button colorScheme="purple" isDisabled={!state.voice || form.length < 1} isLoading={loading} onClick={handleChangeTextToSpeech}>
                   {isXl ? (
                     " Tạo File Giọng Nói"
                   ) : (
@@ -200,7 +199,6 @@ const Tool = () => {
               </GridItem>
               <GridItem>
                 <Button
-                  width={"100%"}
                   isDisabled={form.length < 1}
                   colorScheme="cyan"
                   onClick={() => {
@@ -217,7 +215,7 @@ const Tool = () => {
                 </Button>
               </GridItem>
               <GridItem>
-                <Button width={"100%"} colorScheme="messenger" isDisabled={buttonDisabled || form.length < 1} onClick={() => setModal({ ...modal, open: true })}>
+                <Button colorScheme="messenger" isDisabled={buttonDisabled || form.length < 1} onClick={() => setModal({ ...modal, open: true })}>
                   {isXl ? (
                     "Danh sách audio"
                   ) : (
@@ -227,8 +225,8 @@ const Tool = () => {
                   )}
                 </Button>
               </GridItem>
-            </Grid>
-            <Flex alignItems={"center"}>
+            </Flex>
+            <Flex alignItems={"center"} gap={2}>
               <Text>Ngôn ngữ</Text>
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -290,7 +288,7 @@ const Tool = () => {
         </GridItem>
       </Grid>
       {/* list audio */}
-      <Modal isOpen={modal} onClose={() => setModal(false)}>
+      <Modal isCentered isOpen={modal} onClose={() => setModal(false)}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -327,7 +325,7 @@ const Tool = () => {
 
       {/* list image */}
 
-      <Modal isOpen={modalImg.open} onClose={() => setModalImg({ ...modalImg, open: false, page: 1 })}>
+      <Modal isCentered isOpen={modalImg.open} onClose={() => setModalImg({ ...modalImg, open: false, page: 1 })}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
